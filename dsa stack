@@ -102,7 +102,7 @@ int main(){
             scanf("%d", &num);
             printf("Enter Value:");
             scanf("%d", &val);
-            if(num == 1){
+            if(num == 1)
                 push_stack1(val);
             else if(num == 2)
                 push_stack2(val);
@@ -114,7 +114,7 @@ int main(){
             break;
 
             case 3:
-               printf("Enter stack number(1-2)");
+            printf("Enter stack number(1-2)");
             scanf("%d", &num);
             if(num == 1){
                 res = peek_stack1();
@@ -123,12 +123,27 @@ int main(){
                 }
                 else if(num == 2){
                     res = peek_stack2();
-                    printf("\n%d Available at top of stack-2\n"), res;
+                    printf("\n%d Available at top of stack-2\n", res);
                 }
+                else
+                printf("\nInvalid stack number\n");
             }
-
             break;
 
+            case 4:
+            display_stack1();
+            break;
+
+            case 5:
+            display_stack2();
+            break;
+
+            case 6:
+            exit(0);
+            break;
+
+            default:
+            printf("\nInvalid Choice !!!!\n");
         }
     }
 return 0;
