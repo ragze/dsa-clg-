@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+char opStack[100];
+char operandStack[100][100];
+int top1 = -1, top2 = -1;
+
+int precedence(char op){
+    switch(op){
+        case '+':
+        case '-':
+            return 1;
+        case '*':
+        case '/':
+            return 2;
+        case '^':
+            return 3;
+        default:
+            return 0;
+    }
+}
+
+void doProcess(){
+    char *s1 = operandStack[top1--];
+    char *s2 = operandStack[top1--];
+    char op = opStack[top2--];
+    char result[100] = "";
+    sprintf(result, "%c%s%s", op, s2, s1);
+    strcpy(operandStack[++top1], result);
+}
+
+char* convertInfixToPrefix(char* exp){
+    int len = strlen(exp);
+    for(int i = 0; i < len; i++){
+        char ch = exp[i];
+        if(isalnum(ch)){
+            char str[] = {ch, '\0'};
+            strcpy(operandStack[++top1], str);
+        }
+        else if(ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^'){
+            if(top2 == -1){
+                opStack[++top2] = ch;
+            }
+            else{
+                if(precedence(ch) > precedence(opStack[top2])){
+                    opStack[++top2] = ch;
+                }
+                else{
+                    while(top2 != -1 && precedence(ch) <= precedence(opStack[top2])){
+                        doProcess();
+                    }
+                    opStack[++top2] = ch;
+                }
+            }
+        }
+        else if(ch == '('){
+            opStack[++top2] = ch;
+        }
+        else if(ch == ')'){
+            while(opStack[top2] != '('){
+                doProcess();
+            }
+            top2--;
+        }
+    }
+    while(top2 != -1){
+        doProcess();
+    }
+    char *prefix = (char*)malloc(strlen(operandStack[top1]) + 1);
+    strcpy(prefix, operandStack[top1--]);
+    return prefix;
+}
+
+int main(){
+    char expr[100];
+    printf("Enter Infix Expression: ");
+    gets(expr);
+    printf("Prefix Expression = %s\n", convertInfixToPrefix(expr));
+    return 0;
+}
