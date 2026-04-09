@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+struct Node {
+    int data;
+    int priority;
+    struct Node* next;
+};
+
+struct Node *front = NULL, *rear = NULL;
+
+void enqueue(int data, int priority) {
+    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+    if (temp == NULL) {
+        printf("Queue Overflow !!!\n");
+        return;
+    }
+    temp->data = data;
+    temp->priority = priority;
+    temp->next = NULL;
+    if (front == NULL && rear == NULL)
+        front = rear = temp;
+    else {
+        rear->next = temp;
+        rear = temp;
+    }
+    printf("%d pushed into the queue !!!\n", data);
+}
+
+struct Node* getHighestPriority() {
+    struct Node *curr = front;
+    struct Node *maxNode = front;
+    int max = INT_MIN;
+    while (curr != NULL) {
+        if (curr->priority > max) {
+            max = curr->priority;
+            maxNode = curr;
+        }
+        curr = curr->next;
+    }
+    return maxNode;
+}
+
+int dequeue() {
+    if (front == NULL && rear == NULL) {
+        printf("Queue Underflow !!!\n");
+        return -1;
+    }
+    struct Node* highNode = getHighestPriority();
+    if (highNode == NULL) {
+        printf("Queue Underflow !!!\n");
+        return -1;
+    }
+    struct Node *prev = NULL, *curr = front;
+    while (curr != highNode) {
+        prev = curr;
+        curr = curr->next;
+    }
+    int val = highNode->data;
+    if (prev == NULL)
+        front = highNode->next;
+    else
+        prev->next = highNode->next;
+    if (highNode == rear) rear = prev;
+    free(highNode);
+    return val;
+}
+
+int peek() {
+    if (front == NULL && rear == NULL) {
+        printf("Queue Underflow !!!\n");
+        return -1;
+    }
+    struct Node* highNode = getHighestPriority();
+    if (highNode == NULL) {
+        printf("Queue Underflow !!!\n");
+        return -1;
+    }
+    return highNode->data;
+}
+
+void show() {
+    if (front == NULL && rear == NULL) {
+        printf("Queue is empty !!!\n");
+        return;
+    }
+    struct Node* temp = front;
+    while (temp != NULL) {
+        printf("priority : %d --> value : %d\n", temp->priority, temp->data);
+        temp = temp->next;
+    }
+}
+
+int main() {
+    int data, choice, res, priority;
+    while (1) {
+        printf("\n--- Priority Queue Menu ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek\n");
+        printf("4. Show\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &data);
+                printf("Enter priority: ");
+                scanf("%d", &priority);
+                enqueue(data, priority);
+                break;
+            case 2:
+                res = dequeue();
+                if (res != -1)
+                    printf("%d dequeued from the queue !!!\n", res);
+                break;
+            case 3:
+                res = peek();
+                if (res != -1)
+                    printf("Highest priority element is: %d\n", res);
+                break;
+            case 4:
+                printf("Queue elements (front to rear):\n");
+                show();
+                break;
+            case 5:
+                printf("Exiting...\n");
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    return 0;
+}
