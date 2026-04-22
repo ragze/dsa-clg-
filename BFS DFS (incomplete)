@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
+int graph[MAX][MAX];
+int n;
+void insert(int u, int v){
+    graph[u][v] = 1;
+    graph[v][u] = 1; // Only for undirected graph
+}
+void bfs(int start){
+    int queue[MAX], front = -1, rear = -1;
+    int visited[n];
+    for(int i = 0; i < n; i++)
+        visited[i] = 0;
+    queue[++rear] = start;
+    visited[start] = 1;
+    front++;
+    printf("BFS Traversal : ");
+    while(front <= rear){
+        int v = queue[front++];
+        printf("%d ", v);
+        for(int i = 0; i < n; i++){
+            if(graph[v][i] == 1 && visited[i] == 0){
+                queue[++rear] =  i;
+                visited[i] = 1;
+            }
+        }
+    }
+    printf("\n");
+}
+
+void dfs(int start){
+    int stack[MAX], top = -1;
+    int visited[n];
+    for(int i = 0; i < n; i++)
+        visited[i] = 0;
+    stack[++top] = start;
+    visited[start] = 1;
+    printf("DFS Traversal : ");
+    while(top != -1){
+        int v = stack[top--];
+        if(visited[v] == 0){
+        printf("%d ", v);
+        visited[v] = 1;
+        }
+        for(int i = 0; i < n; i++){
+            if(graph[v][i] == 1 && visited[i] == 0){
+                stack[++top] =  i;
+                visited[i] = 1;
+            }
+        }
+    }
+    printf("\n");
+}
