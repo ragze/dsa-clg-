@@ -67,7 +67,7 @@ int evalInfixExpression(char* exp){
                 if(precedence(ch) > precedence(operator[top2]))
                     operator[++top2] = ch;
                 else{
-                    while(top2 != -1 && precedence(ch) <= precedence(operator[top2])){
+                    while(top2 != -1 && precedence(ch) < precedence(operator[top2])){
                         doProcess();
                     }
                     operator[++top2] = ch;
