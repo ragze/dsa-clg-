@@ -1,7 +1,7 @@
 #include <stdio.h>
 int main(){
     int n;
-    printf("ENter array size: ");
+    printf("Enter array size: ");
     scanf("%d", &n);
     int arr[n];
     printf("Enter array elements: ");
